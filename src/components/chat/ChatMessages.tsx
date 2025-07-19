@@ -167,30 +167,30 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
   return (
     <div className="flex-1 flex flex-col h-full">
       {/* Enhanced Header with Connection Status */}
-      <div className="border-b p-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="border-b p-3 sm:p-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
             {currentConversation?.is_group && (
-              <div className="h-10 w-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center">
-                <Users className="h-5 w-5" />
+              <div className="h-8 w-8 sm:h-10 sm:w-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center flex-shrink-0">
+                <Users className="h-4 w-4 sm:h-5 sm:w-5" />
               </div>
             )}
-            <div>
-              <h3 className="font-semibold flex items-center gap-2">
-                {currentConversation ? getConversationName(currentConversation) : 'Chat'}
+            <div className="min-w-0 flex-1">
+              <h3 className="font-semibold flex items-center gap-1 sm:gap-2 text-sm sm:text-base truncate">
+                <span className="truncate">{currentConversation ? getConversationName(currentConversation) : 'Chat'}</span>
                 {connectionStatus === 'offline' && (
-                  <span title="Offline">
-                    <WifiOff className="h-4 w-4 text-red-500" />
+                  <span title="Offline" className="flex-shrink-0">
+                    <WifiOff className="h-3 w-3 sm:h-4 sm:w-4 text-red-500" />
                   </span>
                 )}
                 {connectionStatus === 'online' && (
-                  <span title="Online">
-                    <Wifi className="h-4 w-4 text-green-500" />
+                  <span title="Online" className="flex-shrink-0">
+                    <Wifi className="h-3 w-3 sm:h-4 sm:w-4 text-green-500" />
                   </span>
                 )}
               </h3>
               {currentConversation && (
-                <p className="text-sm text-muted-foreground">
+                <p className="text-xs sm:text-sm text-muted-foreground truncate">
                   {currentConversation.is_group 
                     ? 'Group conversation'
                     : `Direct message with ${currentConversation.other_user?.name || 'Unknown User'}`
@@ -204,10 +204,10 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
 
       {/* Connection Status Alert */}
       {connectionStatus === 'offline' && (
-        <div className="p-2">
+        <div className="p-2 sm:p-3">
           <Alert variant="destructive">
             <WifiOff className="h-4 w-4" />
-            <AlertDescription>
+            <AlertDescription className="text-sm">
               You're offline. Messages will be sent when connection is restored.
             </AlertDescription>
           </Alert>
@@ -216,10 +216,10 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
 
       {/* Error Alert */}
       {error && (
-        <div className="p-4">
+        <div className="p-3 sm:p-4">
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription>{error}</AlertDescription>
+            <AlertDescription className="text-sm">{error}</AlertDescription>
           </Alert>
         </div>
       )}
@@ -227,7 +227,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
       {/* Messages Container */}
       <div 
         ref={messagesContainerRef}
-        className="flex-1 overflow-y-auto p-4 space-y-4"
+        className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4"
         onScroll={handleScroll}
       >
         {messagesLoading ? (
@@ -267,14 +267,14 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                       {new Date(message.created_at).toLocaleString()}
                     </div>
                   )}
-                  <div className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
-                    <div
-                      className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl ${
-                        isOwn
-                          ? 'bg-primary text-primary-foreground rounded-br-md'
-                          : 'bg-muted rounded-bl-md'
-                      } shadow-sm`}
-                    >
+                   <div className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
+                     <div
+                       className={`max-w-[80%] sm:max-w-xs lg:max-w-md px-3 sm:px-4 py-2 sm:py-3 rounded-2xl text-sm sm:text-base ${
+                         isOwn
+                           ? 'bg-primary text-primary-foreground rounded-br-md'
+                           : 'bg-muted rounded-bl-md'
+                       } shadow-sm`}
+                     >
                       {isGroupChat && !isOwn && senderName && (
                         <p className="text-xs font-medium opacity-70 mb-1">{senderName}</p>
                       )}
@@ -303,7 +303,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
 
       {/* Auto-scroll indicator */}
       {!autoScroll && messages.length > 0 && (
-        <div className="px-4 pb-2">
+        <div className="px-3 sm:px-4 pb-2">
           <Button
             variant="outline"
             size="sm"
@@ -319,7 +319,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
       )}
 
       {/* Enhanced Message Input */}
-      <div className="border-t p-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="border-t p-3 sm:p-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="flex space-x-2">
           <Input
             placeholder={connectionStatus === 'offline' ? 'You are offline...' : 'Type a message...'}
@@ -327,13 +327,14 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyPress={handleKeyPress}
             disabled={!selectedConversation || sending || connectionStatus === 'offline'}
-            className="flex-1"
+            className="flex-1 text-sm sm:text-base"
             maxLength={1000}
           />
           <Button 
             onClick={handleSendMessage} 
             disabled={!newMessage.trim() || !selectedConversation || sending || connectionStatus === 'offline'}
             size="icon"
+            className="flex-shrink-0"
           >
             {sending ? (
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
