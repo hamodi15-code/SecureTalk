@@ -1,4 +1,5 @@
-SECURE TALK PROJECT
+**SECURE TALK PROJECT**
+You can read more about this project in the SECURITY_FEATURES.md file.
 
 **Use your preferred IDE**
 
